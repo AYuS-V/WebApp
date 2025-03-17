@@ -1,0 +1,25 @@
+---
+  - name: Deploying WAR File to Tomcat
+    hosts: self
+    become: yes
+    vars:
+      war_file: "WebApp.war"
+      war_file_path: "/home/admin/Desktop/practice/workspace/Maven/build/{{war_file}}"
+      remote_file_path: "/opt/tomcat/webapps/{{war_file}}"
+      service: "tomcat"
+  
+    tasks:
+      - name: Stop tomcat service 
+        service:
+          name: "{{service}}"
+          state: stopped
+
+      - name: Copy file into webapp folder
+        copy:
+          src:"{{war_file_path}}"
+          dest:"{{remote_file_path}}"
+
+      - name: Start Tomcat
+        service:
+          name: "{{service}}"
+          state: started
